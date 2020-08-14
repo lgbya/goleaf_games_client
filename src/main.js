@@ -7,9 +7,11 @@ import 'bootstrap/dist/css/bootstrap.css'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import Notify from './api/notify'
 import WebSocket from './api/websocket'
+import GameCfg from './api/game_cfg'
+
 import vDialogs from 'v-dialogs'
 Vue.use(vDialogs);
-
+Vue.use(GameCfg);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
@@ -20,18 +22,19 @@ Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>',
-  data(){
-    return {
-        uid : 0,
-    }
-  },
+    el: '#app',
+    router,
+    components: { App },
+    template: '<App/>',
+    data(){
+        return {
+            uid : 0,
+            gameId:0,
+        }
+    },
 
-  created(){
-    this.$initWebSocket()
-  }
+    created(){
+        this.$initWebSocket()
+    }
 
 });

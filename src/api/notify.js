@@ -6,11 +6,11 @@ export default {
 
             var msgList = this.$component.notifyRegister();
             for(var msg in msgList){
-                this.$component["$" + msg.substring(4)] = msgList[msg]
+                this.$component["$s2c" + msg.substring(4)] = msgList[msg]
             }
         };
 
-        Vue.prototype.$Error =  function (data) {
+        Vue.prototype.$s2cError =  function (data) {
             this.$dlg.closeAll();
 
             this.$dlg.toast(data.message, {
@@ -22,15 +22,21 @@ export default {
             this.msg = data.message
         };
 
-        Vue.prototype.$StartGame =  function (data) {
-            this.$router.push({name:"More",params:{'roomInfo':data}})
+        Vue.prototype.$s2cStartGame =  function (data) {
+            var gameCfg = this.$gameCfg[data.gameId];
+            this.$root.gameId = data.gameId;
+            this.$router.push({name:gameCfg.routerName, params:{'roomInfo':data}})
         };
 
-        Vue.prototype.$ContinueGame =  function (data) {
-            this.$router.push({name:"More",params:{'roomInfo':data}})
+        Vue.prototype.$s2cContinueGame =  function (data) {
+            var gameCfg = this.$gameCfg[data.gameId];
+            this.$root.gameId = data.gameId;
+            this.$router.push({name:gameCfg.routerName, params:{'roomInfo':data}})
         };
 
-
-
+        Vue.prototype.$s2cEndGame =  function (data) {
+            this.$root.gameId = 0;
+            this.end(data)
+        };
     }
 }

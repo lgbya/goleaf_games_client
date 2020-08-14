@@ -1,31 +1,27 @@
 <template>
     <div class="row justify-content-center" style="padding-top: 10%">
         <div class="col-md-8">
-            <button v-on:click="c2sMatchGame(1001)" type="button" class="btn btn-info btn-lg btn-block" >
-                猜拳游戏
-            </button>
-            <br/>
-            <button v-on:click="c2sMatchGame(1002)" type="button" class="btn btn-info btn-lg btn-block" >
-                井字棋
-            </button>
-            <br/>
+            <div v-for="(item, index) in $gameCfg">
+                <button v-on:click="c2sMatchGame(index)" type="button" class="btn btn-info btn-lg btn-block" >
+                    {{item.zhCnName}}
+                </button>
+                <br/>
+            </div>
         </div>
     </div>
 </template>
-
 <script>
     import TimeMask from '../components/dlg/Time.vue'
     export default {
         name: "SelectGame",
         data(){
             return{
-                msg:"",
+                gameList:{},
             }
         },
 
         created(){
             this.$init();
-            console.log(this.$root.uid)
         },
 
         methods:{
@@ -38,7 +34,7 @@
 
             c2sMatchGame:function (gameId) {
                 this.$websocketSend({
-                    C2S_MatchPlayer:{gameId:gameId}
+                    C2S_MatchPlayer:{gameId:parseInt(gameId)}
                 })
             },
 

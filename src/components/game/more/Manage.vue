@@ -5,7 +5,7 @@
                 <div class="card-header">{{rival.name}}</div>
             </div>
             <br>
-            <div class="card diagona" style="height: 300px">
+            <div class="card diagona" style="height: 300px;background-color: rgba(0, 0, 0, 0.03);">
 
                 <div style="height: 30%;width: 30%;margin: 15% 0% 0% 60%">
                     <img :src="moreImgArr[rival.ply]" style="width: 100%;height: 100%"/>
@@ -66,11 +66,11 @@
             }
 
             if (this.roomInfo.start){
-                this.s2cStart(this.roomInfo.start)
+                this.start(this.roomInfo.start)
             }
 
             if (this.roomInfo.continue){
-                this.s2cContinue(this.roomInfo.continue)
+                this.continue(this.roomInfo.continue)
             }
 
         },
@@ -82,11 +82,11 @@
                 }
             },
 
-            s2cStart:function(data){
+            start:function(data){
                 return
             },
 
-            s2cContinue:function(data){
+            continue:function(data){
                 this.own.ply = data.ply;
                 this.own = Object.assign({}, this.own);
             },
@@ -104,10 +104,11 @@
                 this.own = Object.assign({}, this.own);
             },
 
-            s2cResult:function (data) {
-                    for(var uid in data.gameInfo){
+            end:function (data) {
+                var gameInfo = data.end.gameInfo
+                    for(var uid in gameInfo){
                         if (uid != this.$root.uid){
-                            this.rival.ply = data.gameInfo[uid];
+                            this.rival.ply = gameInfo[uid];
                             this.rival = Object.assign({}, this.rival);
                         }
                     }

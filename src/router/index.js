@@ -40,17 +40,27 @@ const router = new Router({
 
 router.beforeEach((to,from,next)=>{
 
-    // if (to.meta.auth && uid) {
-    //     return next();
-    // }
-    //
-    // if (uid && to.fullPath==='/') {
-    //     return next({path:'/select-game'})
-    // }
-    //
-    // if(to.meta.auth && !uid){
-    //     return next({path:'/'})
-    // }
+    //判断是否在游戏中
+    var gameId = this.a.app.$root.gameId;
+    if(gameId){
+        //获取游戏的路由
+        var routerName = this.a.app.$gameCfg[gameId].routerName;
+        if (routerName == to.name){
+            return next();
+        }
+        return;
+    }
+
+    var uid = this.a.app.$root.uid;
+    //需要验证判断登录 如果没登录跳转登录页面
+    if (to.meta.auth && !uid) {
+        return next({name:'Login'})
+    }
+
+    //已经登录不允许跳到登录或注册页面
+    if (uid && (to.name==='Login' || to.name==='Register' )) {
+        return next({name:'SelectGame'})
+    }
 
     return next();
 

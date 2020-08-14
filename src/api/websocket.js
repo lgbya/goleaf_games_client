@@ -39,7 +39,7 @@ export default {
                         Vue.prototype.$preHeartTime = Vue.prototype.$nowServerTime;
                         Vue.prototype.$nowServerTime = json[name].time;
                     }else{
-                        Vue.prototype.$component["$" + name.substring(4)](json[name]);
+                        Vue.prototype.$component["$s2c" + name.substring(4)](json[name]);
                     }
                 }
             };
