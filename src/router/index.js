@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
+import Register from '@/components/Register'
 import SelectGame from '@/components/SelectGame'
 import More from '@/components/game/more/Manage'
 
@@ -11,6 +12,11 @@ const router = new Router({
             path: '/',
             name: 'Login',
             component: Login
+        },
+        {
+            path: '/register',
+            name: 'Register',
+            component: Register
         },
         {
             path: '/select-game',
@@ -34,8 +40,6 @@ const router = new Router({
 
 router.beforeEach((to,from,next)=>{
 
-    let uid=localStorage.getItem('uid');
-    console.log(uid);
     // if (to.meta.auth && uid) {
     //     return next();
     // }

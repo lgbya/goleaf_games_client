@@ -26,6 +26,7 @@ new Vue({
   template: '<App/>',
   data(){
     return {
+        uid : 0,
     }
   },
 

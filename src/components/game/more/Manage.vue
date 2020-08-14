@@ -20,13 +20,13 @@
                 <div class="card-header">{{own.name}}</div>
                 <div class="card-body" style="text-align: center">
                     <div >
-                        <button v-on:click="playing(1)" type="button" class="btn btn-default btn" style="border: 1px solid #9e9e9e9e">
+                        <button v-on:click="c2sPlaying(1)" type="button" class="btn btn-default btn" style="border: 1px solid #9e9e9e9e">
                             <img :src="moreImgArr[1]" style="width: 40px;height: 40px"/>
                         </button>
-                        <button v-on:click="playing(2)" type="button"  class="btn btn-default btn" style="border: 1px solid #9e9e9e9e" >
+                        <button v-on:click="c2sPlaying(2)" type="button"  class="btn btn-default btn" style="border: 1px solid #9e9e9e9e" >
                             <img :src="moreImgArr[2]" style="width: 40px;height: 40px"/>
                         </button>
-                        <button v-on:click="playing(3)" type="button" class="btn btn-default btn" style="border: 1px solid #9e9e9e9e">
+                        <button v-on:click="c2sPlaying(3)" type="button" class="btn btn-default btn" style="border: 1px solid #9e9e9e9e">
                             <img :src="moreImgArr[3]" style="width: 40px;height: 40px"/>
                         </button>
                     </div>
@@ -48,36 +48,92 @@
                     require("../../../assets/more_2.jpg"),
                     require("../../../assets/more_3.jpg"),
                 ],
-                moreImg0:require("../../../assets/sikaozhong.jpg"),
-                moreImg1:require("../../../assets/more_1.jpg"),
-                moreImg2:require("../../../assets/more_2.jpg"),
-                moreImg3:require("../../../assets/more_3.jpg"),
                 roomInfo:{},
                 own:{},
                 rival:{},
             }
         },
         created(){
-            //获取传入的参数
+            this.$init();
             this.roomInfo = this.$route.params.roomInfo;
-            this.own = this.roomInfo.user_list[this.$uid];
+            this.own = this.roomInfo.userList[this.$root.uid];
             this.own.ply = 0;
-            for(var uid in this.roomInfo.user_list){
-                if (uid != this.$uid){
-                    this.rival = this.roomInfo.user_list[uid];
+            for(var uid in this.roomInfo.userList){
+                if (uid != this.$root.uid){
+                    this.rival = this.roomInfo.userList[uid];
                     this.rival.ply = 0;
                 }
             }
 
+            if (this.roomInfo.start){
+                this.s2cStart(this.roomInfo.start)
+            }
+
+            if (this.roomInfo.continue){
+                this.s2cContinue(this.roomInfo.continue)
+            }
+
         },
         methods:{
-            playing:function (ply) {
+            notifyRegister:function(){
+                return {
+                    "S2C_MoraPlaying":this.s2cPlaying,
+                    "S2C_MoreResult":this.s2cResult,
+                }
+            },
+
+            s2cStart:function(data){
+                return
+            },
+
+            s2cContinue:function(data){
+                this.own.ply = data.ply;
+                this.own = Object.assign({}, this.own);
+            },
+
+            c2sPlaying:function (ply) {
                 if (this.own.ply == 0){
                     this.$websocketSend({
                         C2S_MoraPlaying:{ply:ply}
                     });
                 }
-            }
+            },
+
+            s2cPlaying:function (data) {
+                this.own.ply = data.ply;
+                this.own = Object.assign({}, this.own);
+            },
+
+            s2cResult:function (data) {
+                    for(var uid in data.gameInfo){
+                        if (uid != this.$root.uid){
+                            this.rival.ply = data.gameInfo[uid];
+                            this.rival = Object.assign({}, this.rival);
+                        }
+                    }
+
+                    var router = this.$router;
+                    if (data.winUid == this.$root.uid){
+                        var info = "You Win!!!";
+                        var type = "success";
+                    }else if(data.winUid == 0){
+                        var info = "No Win!!!";
+                        var type = "info";
+                    } else{
+                        var info = "You Loser!!!";
+                        var type = "error";
+                    }
+
+                    this.$dlg.alert(info,  function(){
+                        // router.push("/select-game")
+                    },{
+                        messageType: type,
+                    })
+            },
+
+
+
+
         }
     }
 </script>

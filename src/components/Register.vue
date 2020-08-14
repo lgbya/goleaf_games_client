@@ -4,30 +4,36 @@
 
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">玩家登录</div>
+                <div class="card-header">玩家注册</div>
                 <div class="card-body">
                     <div class="form-group row mb-0">
                         <div class="col-md-6 offset-md-4" >
-                            <input type="text" v-model="loginName" class="form-control" id="loginName" placeholder="登录账号">
+                            <input type="text" v-model="name" class="form-control" id="name" placeholder="账号">
                         </div>
                     </div>
                     <br>
 
                     <div class="form-group row mb-0">
                         <div class="col-md-6 offset-md-4">
-                            <input type="password" v-model="loginPassword" class="form-control" id="loginPassword" placeholder="登录密码">
+                            <input type="password" v-model="password" class="form-control" id="password" placeholder="密码">
                         </div>
                     </div>
                     <br>
 
                     <div class="form-group row mb-0">
+                        <div class="col-md-6 offset-md-4">
+                            <input type="password" v-model="confirmPassword" class="form-control" id="confirmPassword" placeholder="确认密码">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row mb-0">
                         <div class="col-md-6 offset-md-4" style="margin-left: 23%">
-                            <button type="button" class="btn btn-info" v-on:click="c2sLogin">
-                                登录
+                            <button type="button" class="btn btn-info" v-on:click="c2sRegister">
+                                注册
                             </button>
-                            <router-link to="/register">
+                            <router-link to="/">
                                 <button type="button"  class="btn btn-default btn" style="border: 1px solid #9e9e9e9e">
-                                    注册
+                                    登录
                                 </button>
                             </router-link>
                         </div>
@@ -40,42 +46,44 @@
 
 <script>
     export default {
-        name: "Login",
+        name: "Register",
         data(){
             return{
-                loginName:"Test01",
-                loginPassword:"123456",
+                name:"",
+                password:"",
+                confirmPassword:"",
             }
         },
         created(){
-            this.$init()
+            this.$init();
         },
-
         methods: {
+
             notifyRegister:function(){
                 return{
-                    "S2C_Login":this.s2cLogin
+                    "S2C_Register":this.s2cRegister
                 }
             },
 
-            c2sLogin: function () {
-                this.$dlg.mask('登录请求中。。。', function(){},{});
+            c2sRegister: function () {
+                this.$dlg.mask('注册请求中。。。', function(){},{});
                 var data = {
-                    C2S_Login:{
-                        name: this.loginName,
-                        password: this.loginPassword
+                    C2S_Register:{
+                        name: this.name,
+                        password: this.password,
+                        confirmPassword: this.confirmPassword,
                     }
                 };
                 this.$websocketSend(data);
 
             },
 
-            s2cLogin:function (data) {
+            s2cRegister:function (data) {
                 var self = this;
                 self.$dlg.closeAll();
                 self.$root.uid = data.uid;
                 localStorage.setItem("token", data.token);
-                self.$dlg.mask('登录成功！跳转游戏界面', function(){
+                self.$dlg.mask('注册成功！跳转游戏界面', function(){
                     self.$router.push("/select-game")
                 },{
                     closeTime: 1.5,
