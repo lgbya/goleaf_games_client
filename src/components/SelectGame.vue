@@ -21,7 +21,11 @@
         },
 
         created(){
+            var self = this;
             this.$init();
+            self.$websocket.close();
+
+
         },
 
         methods:{

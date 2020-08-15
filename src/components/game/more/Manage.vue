@@ -78,7 +78,6 @@
             notifyRegister:function(){
                 return {
                     "S2C_MoraPlaying":this.s2cPlaying,
-                    "S2C_MoreResult":this.s2cResult,
                 }
             },
 
@@ -125,9 +124,7 @@
                         var type = "error";
                     }
 
-                    this.$dlg.alert(info,  function(){
-                        // router.push("/select-game")
-                    },{
+                    this.$dlg.alert(info,function(){},{
                         messageType: type,
                     })
             },

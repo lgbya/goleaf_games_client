@@ -66,7 +66,8 @@
             },
 
             c2sRegister: function () {
-                this.$dlg.mask('注册请求中。。。', function(){},{});
+                this.$dlg.mask('注册请求中。。。', function(){},{
+                });
                 var data = {
                     C2S_Register:{
                         name: this.name,
@@ -80,9 +81,8 @@
 
             s2cRegister:function (data) {
                 var self = this;
-                self.$dlg.closeAll();
-                self.$root.uid = data.uid;
-                localStorage.setItem("token", data.token);
+                this.$dlg.closeAll();
+                self.$root.setLoginInfo(data);
                 self.$dlg.mask('注册成功！跳转游戏界面', function(){
                     self.$router.push("/select-game")
                 },{

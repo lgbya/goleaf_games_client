@@ -1,31 +1,34 @@
 
 export default {
     install(Vue)  {
+        Vue.prototype.$currComponent = null;
         Vue.prototype.$init = function(){
-            this.$component = this;
-
-            var msgList = this.$component.notifyRegister();
+            var msgList = this.notifyRegister();
+            Vue.prototype.$currComponent = this;
             for(var msg in msgList){
                 this.$component["$s2c" + msg.substring(4)] = msgList[msg]
             }
         };
 
         Vue.prototype.$s2cError =  function (data) {
-            this.$dlg.closeAll();
+            this.$errorCode[data.code].fun(data,this);
+        };
 
-            this.$dlg.toast(data.message, {
-                messageType: 'error',
-                closeTime: 2,
-                position:'topCenter',
-            });
-
-            this.msg = data.message
+        Vue.prototype.$s2cResetLogin =  function (data) {
+            this.$root.gameId = 0;
+            this.$root.setLoginInfo(data);
         };
 
         Vue.prototype.$s2cStartGame =  function (data) {
-            var gameCfg = this.$gameCfg[data.gameId];
-            this.$root.gameId = data.gameId;
-            this.$router.push({name:gameCfg.routerName, params:{'roomInfo':data}})
+            var self = this;
+            var gameCfg = self.$gameCfg[data.gameId];
+            self.$root.gameId = data.gameId;
+            self.$dlg.closeAll();
+            self.$dlg.mask('匹配成功, 创建游戏中。。。', function(){
+                self.$router.push({name:gameCfg.routerName, params:{'roomInfo':data}})
+            },{
+                closeTime:2,
+            });
         };
 
         Vue.prototype.$s2cContinueGame =  function (data) {
@@ -36,7 +39,10 @@ export default {
 
         Vue.prototype.$s2cEndGame =  function (data) {
             this.$root.gameId = 0;
-            this.end(data)
+            Vue.prototype.$currComponent.end(data)
         };
+
+
+
     }
 }

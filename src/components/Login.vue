@@ -48,7 +48,7 @@
             }
         },
         created(){
-            this.$init()
+            this.$init();
         },
 
         methods: {
@@ -59,26 +59,35 @@
             },
 
             c2sLogin: function () {
-                this.$dlg.mask('登录请求中。。。', function(){},{});
+                var self = this;
+                self.$dlg.mask('登录请求中。。。', function(){
+                    self.$dlg.toast("请求超时。。。", {
+                        messageType: 'error',
+                        closeTime: 2,
+                        position:'topCenter',
+                    });
+                },{
+                    closeTime:10,
+                });
                 var data = {
                     C2S_Login:{
                         name: this.loginName,
                         password: this.loginPassword
                     }
                 };
-                this.$websocketSend(data);
+                self.$websocketSend(data);
 
             },
 
             s2cLogin:function (data) {
                 var self = this;
-                self.$dlg.closeAll();
-                self.$root.uid = data.uid;
-                localStorage.setItem("token", data.token);
+                this.$dlg.closeAll();
+                self.$root.setLoginInfo(data);
                 self.$dlg.mask('登录成功！跳转游戏界面', function(){
                     self.$router.push("/select-game")
                 },{
                     closeTime: 1.5,
+                    singletonKey: "LoginSuccess",
                 })
             }
         }
