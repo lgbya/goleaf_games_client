@@ -44,7 +44,7 @@ router.beforeEach((to,from,next)=>{
     var gameId = this.a.app.$root.gameId;
     if(gameId){
         //获取游戏的路由
-        var routerName = this.a.app.$gameCfg[gameId].routerName;
+        var routerName = this.a.app.$cfg.game[gameId].routerName;
         if (routerName == to.name){
             return next();
         }

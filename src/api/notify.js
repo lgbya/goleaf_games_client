@@ -21,7 +21,7 @@ export default {
 
         Vue.prototype.$s2cStartGame =  function (data) {
             var self = this;
-            var gameCfg = self.$gameCfg[data.gameId];
+            var gameCfg = self.$cfg.game[data.gameId];
             self.$root.gameId = data.gameId;
             self.$dlg.closeAll();
             self.$dlg.mask('匹配成功, 创建游戏中。。。', function(){
@@ -32,7 +32,7 @@ export default {
         };
 
         Vue.prototype.$s2cContinueGame =  function (data) {
-            var gameCfg = this.$gameCfg[data.gameId];
+            var gameCfg = this.$cfg.game[data.gameId];
             this.$root.gameId = data.gameId;
             this.$router.push({name:gameCfg.routerName, params:{'roomInfo':data}})
         };

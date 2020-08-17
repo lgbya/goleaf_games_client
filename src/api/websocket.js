@@ -1,5 +1,3 @@
-const wsuri = "ws://139.159.155.172:3563/?{'new':3}";
-
 export default {
     install(Vue)  {
         Vue.prototype.$websocket = null;
@@ -21,7 +19,7 @@ export default {
                 Vue.prototype.$component= this;
             }
 
-            Vue.prototype.$websocket = new WebSocket(wsuri);
+            Vue.prototype.$websocket = new WebSocket(this.$cfg.websocket.uri);
             Vue.prototype.$websocket.onopen = this.$websocketOnopen;
             Vue.prototype.$websocket.onerror = this.$websocketOnerror;
             Vue.prototype.$websocket.onclose = this.$websocketClose;

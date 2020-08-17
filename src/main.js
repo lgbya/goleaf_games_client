@@ -7,18 +7,18 @@ import 'bootstrap/dist/css/bootstrap.css'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import Notify from './api/notify'
 import WebSocket from './api/websocket'
-import GameCfg from './api/game_cfg'
 import ErrorCode from './api/error_code'
+import Cfg from './config/index'
 
 import vDialogs from 'v-dialogs'
 Vue.use(vDialogs);
-Vue.use(GameCfg);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
 Vue.use(Notify);
 Vue.use(WebSocket);
 Vue.use(ErrorCode);
+Vue.use(Cfg);
 
 Vue.config.productionTip = false;
 

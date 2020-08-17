@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-center" style="padding-top: 10%">
         <div class="col-md-8">
-            <div v-for="(item, index) in $gameCfg">
+            <div v-for="(item, index) in $cfg.game">
                 <button v-on:click="c2sMatchGame(index)" type="button" class="btn btn-info btn-lg btn-block" >
                     {{item.zhCnName}}
                 </button>
