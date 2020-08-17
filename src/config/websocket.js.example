@@ -1,3 +1,3 @@
 export default {
-    uri : "ws://192.168.2.201:3563/?{'new':3}",
+    uri : "ws://XXX.XXX.XXX.XXX:3563/?{'new':3}",
 };
