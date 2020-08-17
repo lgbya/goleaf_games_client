@@ -1,4 +1,4 @@
-const wsuri = "ws://192.168.2.201:3563/?{'new':3}";
+const wsuri = "ws://139.159.155.172:3563/?{'new':3}";
 
 export default {
     install(Vue)  {
