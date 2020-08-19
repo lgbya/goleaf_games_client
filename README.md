@@ -39,11 +39,3 @@ export default {
 ```
     npm run dev
 ```
-
-
-    
-
-
-
-
-
