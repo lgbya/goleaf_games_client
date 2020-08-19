@@ -8,6 +8,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import Notify from './api/notify'
 import WebSocket from './api/websocket'
 import ErrorCode from './api/error_code'
+import Common from './api/common'
 import Cfg from './config/index'
 
 import vDialogs from 'v-dialogs'
@@ -15,6 +16,7 @@ Vue.use(vDialogs);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
+Vue.use(Common);
 Vue.use(Notify);
 Vue.use(WebSocket);
 Vue.use(ErrorCode);

@@ -1,25 +1,26 @@
 
 export default {
     install(Vue)  {
-        Vue.prototype.$currComponent = null;
-        Vue.prototype.$init = function(){
+        const self = Vue.prototype;
+        self.$currComponent = null;
+        self.$init = function(){
             var msgList = this.notifyRegister();
-            Vue.prototype.$currComponent = this;
+            self.$currComponent = this;
             for(var msg in msgList){
                 this.$component["$s2c" + msg.substring(4)] = msgList[msg]
             }
         };
 
-        Vue.prototype.$s2cError =  function (data) {
+        self.$s2cError =  function (data) {
             this.$errorCode[data.code].fun(data,this);
         };
 
-        Vue.prototype.$s2cResetLogin =  function (data) {
+        self.$s2cResetLogin =  function (data) {
             this.$root.gameId = 0;
             this.$root.setLoginInfo(data);
         };
 
-        Vue.prototype.$s2cStartGame =  function (data) {
+        self.$s2cStartGame =  function (data) {
             var self = this;
             var gameCfg = self.$cfg.game[data.gameId];
             self.$root.gameId = data.gameId;
@@ -31,15 +32,15 @@ export default {
             });
         };
 
-        Vue.prototype.$s2cContinueGame =  function (data) {
+        self.$s2cContinueGame =  function (data) {
             var gameCfg = this.$cfg.game[data.gameId];
             this.$root.gameId = data.gameId;
             this.$router.push({name:gameCfg.routerName, params:{'roomInfo':data}})
         };
 
-        Vue.prototype.$s2cEndGame =  function (data) {
+        self.$s2cEndGame =  function (data) {
             this.$root.gameId = 0;
-            Vue.prototype.$currComponent.end(data)
+            self.$currComponent.end(data)
         };
 
 

@@ -31,4 +31,9 @@
         max-width: 544px;
         margin:0 auto;
     }
+
+     .v-dialog-dialog{
+         max-width: 320px;
+     }
+
 </style>

@@ -2,10 +2,14 @@
     <div class="row justify-content-center" style="max-height: 411px;max-width: 544px;margin: 10% auto" >
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{rival.name}}</div>
+                <div class="name">{{rival.name}}</div>
+                <div style="height: 30px;">
+                    <div class="select" v-if="currentUid==rival.uid">请选择！</div>
+                    <div class="wait" v-else>等待中。。。</div>
+                </div>
             </div>
             <br>
-            <div class="card diagona" style="height: 300px;background-color: rgba(0, 0, 0, 0.03);">
+            <div class="card diagona" style="height: 260px;background-color: rgba(0, 0, 0, 0.03);">
 
                 <div style="height: 30%;width: 30%;margin: 15% 0% 0% 60%">
                     <img :src="moreImgArr[rival.ply]" style="width: 100%;height: 100%"/>
@@ -17,8 +21,8 @@
             </div>
             <br>
             <div class="card">
-                <div class="card-header">{{own.name}}</div>
-                <div class="card-body" style="text-align: center">
+                <div class="name">{{own.name}}</div>
+                <div class="card-body" style="text-align: center;background: rgba(78, 85, 91, 0.04);">
                     <div >
                         <button v-on:click="c2sPlaying(1)" type="button" class="btn btn-default btn" style="border: 1px solid #9e9e9e9e">
                             <img :src="moreImgArr[1]" style="width: 40px;height: 40px"/>
@@ -77,7 +81,7 @@
         methods:{
             notifyRegister:function(){
                 return {
-                    "S2C_MoraPlaying":this.s2cPlaying,
+                    "S2C_MoraPlay":this.s2cPlaying,
                 }
             },
 
@@ -93,7 +97,7 @@
             c2sPlaying:function (ply) {
                 if (this.own.ply == 0){
                     this.$websocketSend({
-                        C2S_MoraPlaying:{ply:ply}
+                        C2S_MoraPlay:{ply:ply}
                     });
                 }
             },
@@ -142,5 +146,15 @@
         box-sizing:border-box;
         background:linear-gradient(40deg,transparent 50%, #ddd 50%, transparent 50.5%);
     }
-
+    .wait{
+        color: var(--light);
+        text-align: center;
+        line-height: 30px;
+        background-color: #6c757d99;
+    }
+    .name{
+        height: 35px;
+        text-align: center;
+        margin-top: 5px
+    }
 </style>

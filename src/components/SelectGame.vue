@@ -21,11 +21,7 @@
         },
 
         created(){
-            var self = this;
             this.$init();
-            self.$websocket.close();
-
-
         },
 
         methods:{
@@ -73,9 +69,3 @@
         }
     }
 </script>
-
-<style >
-    .v-dialog-dialog{
-        max-width: 320px;
-    }
-</style>

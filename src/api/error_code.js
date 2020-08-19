@@ -27,6 +27,7 @@ const errorCode = {
 
 export default {
     install(Vue) {
-        Vue.prototype.$errorCode = errorCode;
+        const self = Vue.prototype;
+        self.$errorCode = errorCode;
     }
 }

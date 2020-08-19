@@ -1,54 +1,69 @@
 export default {
     install(Vue)  {
-        Vue.prototype.$websocket = null;
-        Vue.prototype.$component = null;
+        const self = Vue.prototype;
 
-        Vue.prototype.$preHeartTime = 0; //上个心跳包返回的服务器时间
-        Vue.prototype.$nowServerTime = 0; //最新心跳包返回的服务器时间
-        Vue.prototype.$heartTimeObj =  null;//心跳心跳倒计时
-        Vue.prototype.$timeout = 28*1000;//心跳时间
+        self.$websocket = null;
+        self.$component = null;
+        self.$beforeSend = null;
 
-        Vue.prototype.$reconnectTimeObj =  null;//重新登录倒计时
-        Vue.prototype.$reconnectNum =  0;//重新连接次数
-        Vue.prototype.$reconnectMaxNum =  5;//重新连接最大次数
-        Vue.prototype.$nextReconnectTime =  5000;//下次重连的时间
+        self.$preHeartTime = 0; //上个心跳包返回的服务器时间
+        self.$nowServerTime = 0; //最新心跳包返回的服务器时间
+        self.$heartTimeObj =  null;//心跳心跳倒计时
+        self.$timeout = 28*1000;//心跳时间
+
+        self.$reconnectTimeObj =  null;//重新登录倒计时
+        self.$reconnectNum =  0;//重新连接次数
+        self.$reconnectMaxNum =  5;//重新连接最大次数
+        self.$nextReconnectTime =  5000;//下次重连的时间
 
 
-        Vue.prototype.$initWebSocket =  function (){ //初始化weosocket
-            if (Vue.prototype.$component == null) {
-                Vue.prototype.$component= this;
+        self.$initWebSocket =  function (){ //初始化weosocket
+
+
+            if (self.$component == null) {
+                self.$component= this;
             }
 
-            Vue.prototype.$websocket = new WebSocket(this.$cfg.websocket.uri);
-            Vue.prototype.$websocket.onopen = this.$websocketOnopen;
-            Vue.prototype.$websocket.onerror = this.$websocketOnerror;
-            Vue.prototype.$websocket.onclose = this.$websocketClose;
-            Vue.prototype.$websocket.onmessage = this.$websocketOnmessage;
+            self.$component.$dlg.closeAll();
+            self.$websocket = new WebSocket(this.$cfg.websocket.uri);
+            self.$websocket.onopen = this.$websocketOnopen;
+            self.$websocket.onerror = this.$websocketOnerror;
+            self.$websocket.onclose = this.$websocketClose;
+            self.$websocket.onmessage = this.$websocketOnmessage;
             this.$startHeart()
         };
 
         Vue.prototype.$websocketOnopen = function (){ //连接建立之后执行send方法发送数据
             console.log("连接成功！！！");
-            let token = Vue.prototype.$component.$root.token;
+            let self = Vue.prototype;
+            let token = self.$component.$root.token;
             if (token !== ""){
-                Vue.prototype.$websocketSend({C2S_ResetLogin:{token:token}});
+                self.$websocketSend({C2S_ResetLogin:{token:token}});
+            }
+            if (self.$beforeSend !== null){
+                self.$beforeSend();
+                self.$beforeSend = null;
             }
         };
-        Vue.prototype.$websocketClose = function(){  //关闭
-            clearTimeout(Vue.prototype.$reconnectTimeObj);
-            clearTimeout(Vue.prototype.$heartTimeObj);
-            Vue.prototype.$websocketReconnect();
+        self.$websocketClose = function(){  //关闭
+            console.log("连接断开！！！");
+            self.$websocketReconnect();
         };
 
-        Vue.prototype.$websocketReconnect = function(){  //关闭
-            var self = Vue.prototype;
+        self.$websocketReconnect = function(){  //关闭
+
             //判断websocket有没有连接成功
             if(self.$websocket != null && self.$websocket.readyState == 1) {
                 return;
             }
-
+            self.$component.$dlg.mask('正在重新连接。。。',{
+                closeTime: 10,
+                singletonKey: "Reconect",
+            });
             //没连接上会一直重连，设置延迟避免请求过多
+            self.$heartTimeObj && clearTimeout(self.$heartTimeObj);
             self.$reconnectTimeObj && clearTimeout(self.$reconnectTimeObj);
+
             self.$reconnectTimeObj = setInterval(function () {
                 self.$reconnectNum++;
                 let result = self.$websocket != null && self.$websocket.readyState == 1;
@@ -64,7 +79,7 @@ export default {
             }, self.$nextReconnectTime);
         };
 
-        Vue.prototype.$websocketOnmessage = function (evt){//连接建立失败重连
+        self.$websocketOnmessage = function (evt){//连接建立失败重连
             var filrReader = new FileReader();
             filrReader.onload = function() {
                 var arrayBuffer = this.result;
@@ -73,26 +88,36 @@ export default {
                 console.log("返回数据:", json);
                 for (var name in json){
                     if (name == "S2C_Heart"){
-                        Vue.prototype.$preHeartTime = Vue.prototype.$nowServerTime;
-                        Vue.prototype.$nowServerTime = json[name].time;
+                        self.$preHeartTime = self.$nowServerTime;
+                        self.$nowServerTime = json[name].time;
                     }else{
-                        Vue.prototype.$component["$s2c" + name.substring(4)](json[name]);
+                        self.$component["$s2c" + name.substring(4)](json[name]);
                     }
                 }
             };
             filrReader.readAsArrayBuffer(evt.data);
         };
 
-        Vue.prototype.$websocketOnerror = function(){ //数据接收
+        self.$websocketOnerror = function(){ //数据接收
 
         };
 
-        Vue.prototype.$websocketSend = function(data){//数据发送
+        self.$websocketSend = function(data){//数据发送
             console.log("发送数据:",  data);
-            Vue.prototype.$websocket.send(JSON.stringify(data));
+
+            let fun = function () {
+                self.$websocket.send(JSON.stringify(data));
+            };
+
+            if(self.$websocket == null || self.$websocket.readyState !== 1) {
+                self.$beforeSend = fun;
+                self.$websocketReconnect();
+            }else{
+                fun();
+            }
         };
 
-        Vue.prototype.$startHeart = function(){  //关闭
+        self.$startHeart = function(){  //关闭
             var self = this;
 
             self.$heartTimeObj && clearTimeout(self.$heartTimeObj);

@@ -3,7 +3,8 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import SelectGame from '@/components/SelectGame'
-import More from '@/components/game/more/Manage'
+import More from '@/components/game/more/Index'
+import Tictactoe from '@/components/game/tictactoe/Index'
 
 Vue.use(Router)
 const router = new Router({
@@ -30,6 +31,15 @@ const router = new Router({
             path: '/game/more',
             name: 'More',
             component: More,
+            meta:{
+                auth:true//添加字段判断该页面是否需要登录
+            }
+
+        },
+        {
+            path: '/game/tictactoe',
+            name: 'Tictactoe',
+            component: Tictactoe,
             meta:{
                 auth:true//添加字段判断该页面是否需要登录
             }
