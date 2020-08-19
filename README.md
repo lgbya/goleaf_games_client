@@ -20,7 +20,7 @@ export default {
 };
 ```
 
-1. **修改index.js文件**
+2. **修改index.js文件**
 ```
     cd config/index.js
     修改以下位置
@@ -31,12 +31,12 @@ export default {
 	}
 ```
 
-1. **安装对应的依赖包**
+3. **安装对应的依赖包**
 ```
     npm install
 ```
 
-1. 运行项目
+4. 运行项目
 ```
     npm run dev
 ```
