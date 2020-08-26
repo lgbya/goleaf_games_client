@@ -4,8 +4,8 @@
             <div class="card">
                 <div class="name">{{rival.name}}</div>
                 <div style="height: 30px;">
-                    <div class="select" v-if="currentUid==rival.uid">请选择！</div>
-                    <div class="wait" v-else>等待中。。。</div>
+                    <div class="wait" v-if="rival.ply==0">选择中。。。</div>
+                    <div class="select" v-else>已选择</div>
                 </div>
             </div>
             <br>
@@ -146,12 +146,21 @@
         box-sizing:border-box;
         background:linear-gradient(40deg,transparent 50%, #ddd 50%, transparent 50.5%);
     }
+    .select{
+        color: var(--light);
+        text-align: center;
+        line-height: 30px;
+        background-color: var(--cyan);
+    }
+
     .wait{
         color: var(--light);
         text-align: center;
         line-height: 30px;
         background-color: #6c757d99;
     }
+
+
     .name{
         height: 35px;
         text-align: center;
