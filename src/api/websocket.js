@@ -9,7 +9,7 @@ export default {
         self.$preHeartTime = 0; //上个心跳包返回的服务器时间
         self.$nowServerTime = 0; //最新心跳包返回的服务器时间
         self.$heartTimeObj =  null;//心跳心跳倒计时
-        self.$timeout = 28*1000;//心跳时间
+        self.$timeout = 15*1000;//心跳时间
 
         self.$reconnectTimeObj =  null;//重新登录倒计时
         self.$reconnectNum =  0;//重新连接次数

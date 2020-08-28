@@ -43,8 +43,8 @@
         name: "Login",
         data(){
             return{
-                loginName:"Test01",
-                loginPassword:"123456",
+                loginName:"",
+                loginPassword:"",
             }
         },
         created(){
